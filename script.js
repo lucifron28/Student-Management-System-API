@@ -1,4 +1,4 @@
-const apiUrl = 'http://student-record-management-api-ron-cada-projects.vercel.app/students';
+const apiUrl = 'https://student-record-management-api-ron-cada-projects.vercel.app/students';
 let students = []; // Define the students variable to store the fetched student data
 
 document.addEventListener('DOMContentLoaded', fetchAndDisplayStudents);
