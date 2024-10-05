@@ -1,5 +1,5 @@
 const apiUrl = 'http://127.0.0.1:8000/students';
-let students = []; // Define the students variable to store the fetched student data
+let students = [];
 
 document.addEventListener('DOMContentLoaded', fetchAndDisplayStudents);
 
@@ -10,7 +10,7 @@ async function fetchAndDisplayStudents() {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        students = data; // Store the fetched student data in the students variable
+        students = data;
         displayStudents(students);
     } catch (error) {
         console.error('Error fetching students:', error);
