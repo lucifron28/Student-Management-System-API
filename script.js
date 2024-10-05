@@ -1,4 +1,4 @@
-const apiUrl = 'http://127.0.0.1:8000/students';
+const apiUrl = 'https://student-record-management-api-ron-cada-projects.vercel.app/students';
 let students = [];
 
 document.addEventListener('DOMContentLoaded', fetchAndDisplayStudents);
