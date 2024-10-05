@@ -46,7 +46,6 @@ td {
     background-color: #F0EAD6;
 }
 
-/* Add this to the existing CSS */
 @keyframes slideIn {
     from {
         opacity: 0;
@@ -89,7 +88,6 @@ td {
     animation: rowAdd 0.5s ease-out;
 }
 
-/* New styles for single-line form */
 #studentForm {
     display: flex;
     flex-wrap: wrap;

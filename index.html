@@ -2,28 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Information System</title>
+    <title>Student Management</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Student Information System<h1>
+        <h1>Student Management</h1>
     </header>
+    <div id="response"></div>
     <div class="add-student">
-        <button onclick="showAddStudentForm()" id="addStudent">Add Student</button>
+        <button id="addStudent" onclick="showAddStudentForm()">Add Student</button>
     </div>
-    <div id="formContainer" style="display: none;">
-        <form id="studentForm">
+    <div id="formContainer">
+        <form id="studentForm" onsubmit="submitStudentForm(); return false;">
             <input type="hidden" id="studentId">
-            <input type="text" id="studentName" placeholder="Name" required>
-            <input type="text" id="studentNumber" placeholder="Student Number" required>
-            <input type="text" id="studentProgram" placeholder="Program" required>
-            <button type="button" onclick="submitStudentForm()">Submit</button>
+            <div>
+                <label for="studentName">Name:</label>
+                <input type="text" id="studentName" required>
+            </div>
+            <div>
+                <label for="studentNumber">Student Number:</label>
+                <input type="text" id="studentNumber" required>
+            </div>
+            <div>
+                <label for="studentProgram">Program:</label>
+                <input type="text" id="studentProgram" required>
+            </div>
+            <button type="submit">Submit</button>
             <button type="button" onclick="hideForm()">Cancel</button>
         </form>
     </div>
-    <div id="response"></div>
     <table id="studentsTable">
         <thead>
             <tr>
@@ -34,9 +42,9 @@
             </tr>
         </thead>
         <tbody>
+            <!-- Student rows will be inserted here by JavaScript -->
         </tbody>
     </table>
-
     <script src="script.js"></script>
 </body>
 </html>

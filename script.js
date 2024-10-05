@@ -1,4 +1,4 @@
-const apiUrl = 'https://student-record-management-api-ron-cada-projects.vercel.app/students';
+const apiUrl = 'http://127.0.0.1:8000/students';
 let students = []; // Define the students variable to store the fetched student data
 
 document.addEventListener('DOMContentLoaded', fetchAndDisplayStudents);
@@ -6,8 +6,11 @@ document.addEventListener('DOMContentLoaded', fetchAndDisplayStudents);
 async function fetchAndDisplayStudents() {
     try {
         const response = await fetch(apiUrl);
-        const data = await handleResponse(response);
-        students = data.students; // Store the fetched student data in the students variable
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        students = data; // Store the fetched student data in the students variable
         displayStudents(students);
     } catch (error) {
         console.error('Error fetching students:', error);
@@ -29,9 +32,7 @@ async function submitStudentForm() {
     const id = document.getElementById('studentId').value;
     if (id) {
         await updateStudent(id);
-        console.log('student found', id);
     } else {
-        console.log('create student', id);
         await createStudent();
     }
     hideForm();
@@ -40,47 +41,71 @@ async function submitStudentForm() {
 
 async function createStudent() {
     const student = getStudentData();
-    const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(student)
-    });
-    await handleResponse(response);
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(student)
+        });
+        if (!response.ok) {
+            throw new Error('Error creating student');
+        }
+    } catch (error) {
+        console.error('Error creating student:', error);
+    }
 }
 
 async function updateStudent(id) {
     const student = getStudentData();
-    const response = await fetch(`${apiUrl}/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(student)
-    });
-    await handleResponse(response);
-
+    try {
+        const response = await fetch(`${apiUrl}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(student)
+        });
+        if (!response.ok) {
+            throw new Error('Error updating student');
+        }
+    } catch (error) {
+        console.error('Error updating student:', error);
+    }
+    fetchAndDisplayStudents();
 }
 
 async function partialUpdateStudent(id) {
     const student = getStudentData();
-    const response = await fetch(`${apiUrl}/${id}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(student)
-    });
-    await handleResponse(response);
+    try {
+        const response = await fetch(`${apiUrl}/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(student)
+        });
+        if (!response.ok) {
+            throw new Error('Error partially updating student');
+        }
+    } catch (error) {
+        console.error('Error partially updating student:', error);
+    }
     fetchAndDisplayStudents();
 }
 
 async function deleteStudent(id) {
-    const response = await fetch(`${apiUrl}/${id}`, {
-        method: 'DELETE'
-    });
-    await handleResponse(response);
+    try {
+        const response = await fetch(`${apiUrl}/${id}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            throw new Error('Error deleting student');
+        }
+    } catch (error) {
+        console.error('Error deleting student:', error);
+    }
     fetchAndDisplayStudents();
 }
 
@@ -97,16 +122,16 @@ function displayStudents(students) {
     tableBody.innerHTML = ''; // Clear existing table rows
 
     if (students && Array.isArray(students)) {
-        students.forEach((student, index) => {
+        students.forEach((student) => {
             const row = tableBody.insertRow();
             row.insertCell(0).innerText = student.name;
             row.insertCell(1).innerText = student.student_number;
             row.insertCell(2).innerText = student.program;
             const actionsCell = row.insertCell(3);
             actionsCell.innerHTML = `
-                <button onclick="editStudent(${index + 1})">Edit</button>
-                <button onclick="partialEditStudent(${index + 1})">Partial Edit</button>
-                <button onclick="deleteStudent(${index + 1})">Delete</button>
+                <button onclick="editStudent(${student.id})">Edit</button>
+                <button onclick="partialEditStudent(${student.id})">Partial Edit</button>
+                <button onclick="deleteStudent(${student.id})">Delete</button>
             `;
         });
     } else {
@@ -115,18 +140,29 @@ function displayStudents(students) {
 }
 
 function editStudent(id) {
-    console.log('edit student', id);
-    showAddStudentForm();
-    document.getElementById('studentId').value = id;
+    const student = students.find(student => student.id === id);
+    if (student) {
+        showAddStudentForm();
+        document.getElementById('studentId').value = id;
+        document.getElementById('studentName').value = student.name;
+        document.getElementById('studentNumber').value = student.student_number;
+        document.getElementById('studentProgram').value = student.program;
+    } else {
+        console.error('Student not found:', id);
+    }
 }
 
 function partialEditStudent(id) {
-    const student = students[id - 1];
-    showAddStudentForm();
-    document.getElementById('studentId').value = id;
-    document.getElementById('studentName').value = student.name;
-    document.getElementById('studentNumber').value = student.student_number;
-    document.getElementById('studentProgram').value = student.program;
+    const student = students.find(student => student.id === id);
+    if (student) {
+        showAddStudentForm();
+        document.getElementById('studentId').value = id;
+        document.getElementById('studentName').value = student.name;
+        document.getElementById('studentNumber').value = student.student_number;
+        document.getElementById('studentProgram').value = student.program;
+    } else {
+        console.error('Student not found:', id);
+    }
 }
 
 async function handleResponse(response) {
