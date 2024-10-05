@@ -3,25 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student API</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+    <title>Student Information System</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Student API</h1>
-    <button onclick="showAddStudentForm()">Add Student</button>
+    <header>
+        <h1>Student Information System<h1>
+    </header>
+    <div class="add-student">
+        <button onclick="showAddStudentForm()" id="addStudent">Add Student</button>
+    </div>
     <div id="formContainer" style="display: none;">
         <form id="studentForm">
             <input type="hidden" id="studentId">
